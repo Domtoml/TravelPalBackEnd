@@ -4,14 +4,40 @@ package travelpal.v1;
 
 option go_package = "TravelPalBackEnd/pkg/proto/travelpal/v1";
 
-service Greeter {
-  rpc SayHello (HelloRequest) returns (HelloReply) {}
+// Trip message defines the core "trip" object that will be used throughout the
+// API.
+message Trip {
+  string id = 1;
+  string name = 2;
+  google.protobuf.Timestamp start_date = 3;
+  google.protobuf.Timestamp end_date = 4;
+  repeated string destinations = 5;
 }
 
-message HelloRequest {
-  string name = 1;
+// CreateTripRequest defines the request object for creating a new trip.
+message CreateTripRequest {
+  string user_id = 1;
+  Trip trip = 2;
 }
 
-message HelloReply {
-  string message = 1;
+// CreateTripResponse defines the response object for creating a new trip.
+message CreateTripResponse { Trip trip = 1; }
+
+// GetTripsRequest defines the request object for retrieving all trips for a
+// given user.
+message GetTripsRequest { string user_id = 1; }
+
+// GetTripsResponse defines the response object for retrieving all trips for a
+// given user.
+message GetTripsResponse { repeated Trip trips = 1; }
+
+service TravelPalService {
+  
+  // CreateTrip defines a new trip for a given user.
+  rpc CreateTrip (CreateTripRequest) returns (CreateTripResponse) {}
+  
+  // GetTrips retrieves all Trips for a relevant user.
+  rpc GetTrips (GetTripsRequest) returns (GetTripsResponse) {}
 }
+
+
